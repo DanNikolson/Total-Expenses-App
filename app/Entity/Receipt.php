@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 #[Entity, Table('receipts')]
 class Receipt
@@ -22,4 +23,7 @@ class Receipt
 
     #[Column(name: 'created_at')]
     private DateTime $createdAt;
+
+    #[ManyToOne(inversedBy: 'receipts')]
+    private Transaction $transaction;
 }
