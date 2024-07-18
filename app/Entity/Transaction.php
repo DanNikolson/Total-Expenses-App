@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\DBAL\Types\Types;
@@ -44,4 +45,9 @@ class Transaction
 
     #[OneToMany(mappedBy: 'transaction', targetEntity: Receipt::class)]
     private Collection $receipts;
+
+    public function __construct()
+    {
+        $this->receipts = new ArrayCollection();
+    }
 }
