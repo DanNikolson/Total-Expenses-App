@@ -11,18 +11,15 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 
-#[Entity, Table('categories')]
-class Category
+#[Entity, Table('receipts')]
+class Receipt
 {
     #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
     private int $id;
 
     #[Column]
-    private string $name;
+    private string $file_name;
 
     #[Column(name: 'created_at')]
     private DateTime $createdAt;
-
-    #[Column(name: 'updated_at')]
-    private DateTime $updatedAt;
 }
