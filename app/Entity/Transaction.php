@@ -28,7 +28,7 @@ class Transaction
     #[Column]
     private DateTime $date;
 
-    #[Column(name: 'amount', Type: Types::DECIMAL, precision: 13, scale: 3)]
+    #[Column(name: 'amount', type: Types::DECIMAL, precision: 13, scale: 3)]
     private float $amount;
 
     #[Column(name: 'created_at')]
