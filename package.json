@@ -1,5 +1,5 @@
 {
-  "name": "expennies",
+  "name": "total_expenses",
   "version": "1.0.0",
   "scripts": {
     "dev": "encore dev",
