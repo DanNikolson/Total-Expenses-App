@@ -14,12 +14,12 @@ class AuthController
 
     public function loginView(Request $request, Response $response): Response
     {
-        return $this->twig->render($response, 'login.twig');
+        return $this->twig->render($response, 'auth/login.twig');
     }
 
     public function registerView(Request $request, Response $response): Response
     {
-        //TODO: Registration view
+        return $this->twig->render($response, 'auth/register.twig');
     }
 
     public function Register(Request $request, Response $response): Response
