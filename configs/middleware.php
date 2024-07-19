@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Config;
-use App\Middleware\StartSessionsMiddleware;
-use App\Middleware\ValidationExceptionMiddleware;
 use Slim\App;
+use App\Config;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+use App\Middleware\StartSessionsMiddleware;
+use App\Middleware\ValidationErrorsMiddleware;
+use App\Middleware\ValidationExceptionMiddleware;
 
 return function (App $app) {
     $container = $app->getContainer();
@@ -15,6 +16,7 @@ return function (App $app) {
 
     $app->add(TwigMiddleware::create($app, $container->get(Twig::class)));
     $app->add(ValidationExceptionMiddleware::class);
+    $app->add(ValidationErrorsMiddleware::class);
     $app->add(StartSessionsMiddleware::class);
     $app->addErrorMiddleware(
         (bool) $config->get('display_error_details'),
