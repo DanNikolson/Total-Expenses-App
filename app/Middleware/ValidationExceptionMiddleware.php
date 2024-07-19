@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 /**
- * @description Middleware that handles ValidationExceptions and redirects to /register.
+ * @description Middleware that handles ValidationExceptions and redirects to the referer.
  */
 class ValidationExceptionMiddleware implements MiddlewareInterface
 {
@@ -22,7 +22,6 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
      * @var ResponseFactoryInterface
      */
     private ResponseFactoryInterface $responseFactory;
-
     /**
      * Create a new instance of ValidationExceptionMiddleware.
      *
@@ -32,7 +31,6 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
     {
         $this->responseFactory = $responseFactory;
     }
-
     /**
      * Process the request and handle any ValidationExceptions that occur.
      *
@@ -49,8 +47,9 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         } catch (ValidationException $e) {
             $response = $this->responseFactory->createResponse();
-
             $referer = $request->getServerParams()['HTTP_REFERER'];
+
+            $_SESSION['errors'] = $e->errors;
 
             return $response->withHeader('Location', $referer)->withStatus(302);
         }

@@ -34,8 +34,8 @@ class StartSessionsMiddleware implements MiddlewareInterface
 
         $response = $handler->handle($request);
 
-        return $response;
-
         session_write_close();
+
+        return $response;
     }
 }
