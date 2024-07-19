@@ -6,6 +6,7 @@ use App\Entity\User;
 use Slim\Views\Twig;
 use Valitron\Validator;
 use Doctrine\ORM\EntityManager;
+use App\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -44,7 +45,7 @@ class AuthController
             echo "Yay! We're all good!";
         } else {
             // Errors
-            var_dump($v->errors());
+            throw new ValidationException($v->errors());
         }
 
         exit;
