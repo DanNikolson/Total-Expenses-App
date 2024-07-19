@@ -36,11 +36,12 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
     /**
      * Process the request and handle any ValidationExceptions that occur.
      *
-     * If a ValidationException is thrown, a redirect to /register is returned.
+     * If a ValidationException is thrown, a redirect to the referer is returned.
      *
-     * @param  ServerRequestInterface  $request The request object.
-     * @param  RequestHandlerInterface $handler The request handler.
-     * @return ResponseInterface       The response.
+     * @param  ServerRequestInterface  $request     The request object.
+     * @param  RequestHandlerInterface $handler     The request handler.
+     * @return ResponseInterface                     The response.
+     * @throws ValidationException                  If a ValidationException is thrown.
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -49,7 +50,9 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
         } catch (ValidationException $e) {
             $response = $this->responseFactory->createResponse();
 
-            return $response->withHeader('Location', '/register')->withStatus(302);
+            $referer = $request->getServerParams()['HTTP_REFERER'];
+
+            return $response->withHeader('Location', $referer)->withStatus(302);
         }
     }
 }
