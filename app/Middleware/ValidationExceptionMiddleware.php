@@ -33,8 +33,8 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
     }
     /**
      * Process the request and handle any ValidationExceptions that occur.
-     *
      * If a ValidationException is thrown, a redirect to the referer is returned.
+     * Exclude sensitive fields from the old form data.
      *
      * @param  ServerRequestInterface  $request     The request object.
      * @param  RequestHandlerInterface $handler     The request handler.
@@ -48,9 +48,12 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
         } catch (ValidationException $e) {
             $response = $this->responseFactory->createResponse();
             $referer = $request->getServerParams()['HTTP_REFERER'];
+            $oldData = $request->getParsedBody();
+
+            $sensitiveFields = ['password', 'confirmPassword'];
 
             $_SESSION['errors'] = $e->errors;
-            $_SESSION['old'] = $request->getParsedBody();
+            $_SESSION['old'] = array_diff_key($oldData, array_flip($sensitiveFields));
 
             return $response->withHeader('Location', $referer)->withStatus(302);
         }
