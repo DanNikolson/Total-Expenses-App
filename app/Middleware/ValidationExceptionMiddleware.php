@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 /**
- * Middleware that handles ValidationExceptions and redirects to /register.
+ * @description Middleware that handles ValidationExceptions and redirects to /register.
  */
 class ValidationExceptionMiddleware implements MiddlewareInterface
 {
