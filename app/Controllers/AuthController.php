@@ -77,6 +77,8 @@ class AuthController
             throw new ValidationException(['password' => ['You have entered an invalid email or password']]);
         }
 
+        session_regenerate_id();
+
         $_SESSION['user'] = $user->getId();
         return $response->withHeader('Location', '/')->withStatus(302);
     }
