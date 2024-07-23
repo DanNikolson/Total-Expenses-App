@@ -32,4 +32,13 @@ interface AuthInterface
      * @return bool True if the provided credentials match the user's credentials, false otherwise.
      */
     public function checkCredentials(UserInterface $user, array $credentials): bool;
+
+    /**
+     * Logs the user out.
+     *
+     * Clears any authentication related data and sets the user to null.
+     *
+     * @return void
+     */
+    public function logOut(): void;
 }
