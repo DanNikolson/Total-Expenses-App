@@ -64,11 +64,11 @@ class Auth implements AuthInterface
      * @param array $data The login data.
      * @return bool True if login attempt was successful, false otherwise.
      */
-    public function attemptLogin(array $data): bool
+    public function attemptLogin(array $credentials): bool
     {
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
-        if (!$user || !password_verify($data['password'], $user->getPassword())) {
+        if (!$user || !$this->checkCredentials($user, $credentials)) {
             return false;
         }
 
@@ -79,5 +79,17 @@ class Auth implements AuthInterface
         $this->user = $user;
 
         return true;
+    }
+
+    /**
+     * Checks if the provided credentials match the user's credentials.
+     *
+     * @param UserInterface $user The user to check the credentials against.
+     * @param array $credentials The credentials to check.
+     * @return bool True if the credentials match, false otherwise.
+     */
+    public function checkCredentials(UserInterface $user, array $credentials): bool
+    {
+        return password_verify($credentials['password'], $user->getPassword());
     }
 }

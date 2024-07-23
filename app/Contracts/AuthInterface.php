@@ -23,4 +23,13 @@ interface AuthInterface
      * @return bool True if login attempt was successful, false otherwise.
      */
     public function attemptLogin(array $data): bool;
+
+    /**
+     * Checks the provided credentials against the given user's credentials.
+     *
+     * @param UserInterface $user The user to check credentials against.
+     * @param array $credentials The credentials to check.
+     * @return bool True if the provided credentials match the user's credentials, false otherwise.
+     */
+    public function checkCredentials(UserInterface $user, array $credentials): bool;
 }
