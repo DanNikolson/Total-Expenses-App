@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Contracts\AuthInterface;
 use App\Entity\User;
 use Slim\Views\Twig;
 use Valitron\Validator;
@@ -12,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AuthController
 {
-    public function __construct(private readonly Twig $twig, private readonly EntityManager $entityManager)
+    public function __construct(private readonly Twig $twig, private readonly EntityManager $entityManager, private readonly AuthInterface $auth)
     {
     }
 
@@ -71,15 +72,10 @@ class AuthController
         $v->rule('required', ['email', 'password']);
         $v->rule('email', 'email');
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']]);
 
-        if (!$user || !password_verify($data['password'], $user->getPassword())) {
-            throw new ValidationException(['password' => ['You have entered an invalid email or password']]);
+        if (!$this->auth->attemptLogin($data)) {
+            throw new ValidationException(['password' => ['You have entered an invalid username or password']]);
         }
-
-        session_regenerate_id();
-
-        $_SESSION['user'] = $user->getId();
         return $response->withHeader('Location', '/')->withStatus(302);
     }
 

@@ -57,4 +57,27 @@ class Auth implements AuthInterface
         $this->user = $user;
         return $this->user;
     }
+
+    /**
+     * Attempts to login with the provided data.
+     *
+     * @param array $data The login data.
+     * @return bool True if login attempt was successful, false otherwise.
+     */
+    public function attemptLogin(array $data): bool
+    {
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']]);
+
+        if (!$user || !password_verify($data['password'], $user->getPassword())) {
+            return false;
+        }
+
+        session_regenerate_id();
+
+        $_SESSION['user'] = $user->getId();
+
+        $this->user = $user;
+
+        return true;
+    }
 }
