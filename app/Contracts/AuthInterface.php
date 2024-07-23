@@ -22,7 +22,7 @@ interface AuthInterface
      * @param array $data The login data.
      * @return bool True if login attempt was successful, false otherwise.
      */
-    public function attemptLogin(array $data): bool;
+    public function attemptLogin(array $credentials): bool;
 
     /**
      * Checks the provided credentials against the given user's credentials.
