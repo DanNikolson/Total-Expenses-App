@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
-use App\Entity\User;
-use Doctrine\ORM\EntityManager;
 use App\Contracts\AuthInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
