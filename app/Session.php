@@ -28,6 +28,9 @@ class Session implements SessionInterface
      * Starts the session if it has not already been started.
      *
      * @throws SessionException if the session has already been started or if headers have been sent.
+     * Sets session cookie params.
+     * Sets session name.
+     * Starts session, @throws SessionException if the session could not be started.
      */
     public function start(): void
     {
@@ -46,8 +49,13 @@ class Session implements SessionInterface
                 'samesite' => $this->options->sameSite->value,
             ]
         );
+        if (!empty($this->options->name)) {
+            session_name($this->options->name);
+        }
 
-        session_start();
+        if (!session_start()) {
+            throw new SessionException('Unable to start the session');
+        };
     }
 
     /**
