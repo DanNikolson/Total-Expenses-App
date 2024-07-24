@@ -129,4 +129,33 @@ class Session implements SessionInterface
     {
         unset($_SESSION[$key]);
     }
+
+    /**
+     * Flashes a message to the session with optional custom messages.
+     *
+     * @param string $key The main message to flash
+     * @param array $messages Additional messages to flash
+     */
+    public function flash(string $key, array $messages): void
+    {
+        $_SESSION[$this->options->flashName][$key] = $messages;
+    }
+
+    /**
+     * Retrieves flash messages stored under a given key.
+     *
+     * This method retrieves flash messages from the session and removes them from the session.
+     *
+     * @param string $key The key to retrieve the flash messages from
+     * @return array The flash messages stored under the given key, or an empty array if no messages are stored
+     */
+
+    public function getFlash(string $key): array
+    {
+        $messages = $_SESSION[$this->options->flashName][$key] ?? [];
+
+        unset($_SESSION[$this->options->flashName][$key]);
+
+        return $messages;
+    }
 }
