@@ -19,7 +19,7 @@ class Session implements SessionInterface
      *
      * Initializes the session.
      */
-    public function __construct()
+    public function __construct(private readonly array $options)
     {
     }
 
@@ -35,10 +35,16 @@ class Session implements SessionInterface
         }
 
         if (headers_sent($filename, $line)) {
-            throw new SessionException('Headers have already been sent');
+            throw new SessionException('Headers have already been sent by ' . $filename . ':' . $line);
         }
 
-        session_set_cookie_params(['secure' => true, 'httponly' => true, 'samesite' => 'lax']);
+        session_set_cookie_params(
+            [
+                'secure' => $this->options['secure'] ?? true,
+                'httponly' => $this->options['httponly'] ?? true,
+                'samesite' => $this->options['samesite'] ?? 'lax',
+            ]
+        );
 
         session_start();
     }
