@@ -75,4 +75,58 @@ class Session implements SessionInterface
     {
         return session_status() === PHP_SESSION_ACTIVE;
     }
+
+    /**
+     * Retrieves the value of a session variable, or a default value if the variable does not exist.
+     *
+     * @param string $key The name of the session variable
+     * @param mixed $default The default value to return if the session variable does not exist
+     * @return mixed The value of the session variable, or the default value
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return $this->has($key) ? $_SESSION[$key] : $default;
+    }
+
+    /**
+     * Checks whether a session variable exists.
+     *
+     * @param string $key The name of the session variable
+     * @return bool true if the session variable exists, false otherwise
+     */
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $_SESSION);
+    }
+
+    /**
+     * Update the current session id with a newly generated one
+     *
+     * @return bool true if the session ID was regenerated, false otherwise
+     */
+    public function regenerate(): bool
+    {
+        return session_regenerate_id();
+    }
+
+    /**
+     * Sets the value of a session variable.
+     *
+     * @param string $key The name of the session variable
+     * @param mixed $value The value to set the session variable to
+     */
+    public function put(string $key, mixed $value): void
+    {
+        $_SESSION[$key] = $value;
+    }
+
+    public function forget(string $key): void
+    /**
+     * Deletes a session variable.
+     *
+     * @param string $key The name of the session variable to delete
+     */
+    {
+        unset($_SESSION[$key]);
+    }
 }

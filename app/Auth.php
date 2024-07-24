@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Contracts\AuthInterface;
+use App\Contracts\SessionInterface;
 use App\Contracts\UserInterface;
 use App\Contracts\UserProviderServiceInterface;
 
@@ -26,12 +27,19 @@ class Auth implements AuthInterface
      *
      * @param UserProviderServiceInterface $userProvider The service used to retrieve users from the database.
      */
-    public function __construct(private readonly UserProviderServiceInterface $userProvider)
-    {
+    public function __construct(
+        private readonly UserProviderServiceInterface $userProvider,
+        private readonly SessionInterface $session
+    ) {
     }
+
 
     /**
      * Returns the currently authenticated user.
+     *
+     * This method checks if a user is already authenticated by checking if the 'user' session variable is set.
+     * If a user is authenticated, it returns the user entity. If not, it retrieves the user from the database
+     * using the user provider service and sets the user entity. If the user is not found, it returns null.
      *
      * @return UserInterface|null The authenticated user, or null if no user is authenticated.
      */
@@ -41,7 +49,7 @@ class Auth implements AuthInterface
             return $this->user;
         }
 
-        $userId = $_SESSION['user'] ?? null;
+        $userId = $this->session->get('user');
 
         if (!$userId) {
             return null;
@@ -57,10 +65,15 @@ class Auth implements AuthInterface
         return $this->user;
     }
 
+
     /**
      * Attempts to login with the provided data.
      *
-     * @param array $data The login data.
+     * This method retrieves the user from the user provider service based on the provided credentials.
+     * If the user is not found or the credentials do not match, the method returns false.
+     * Otherwise, it updates the session ID with the new one, stores the user ID in the session, and sets the authenticated user.
+     *
+     * @param array $credentials The login data.
      * @return bool True if login attempt was successful, false otherwise.
      */
     public function attemptLogin(array $credentials): bool
@@ -71,9 +84,8 @@ class Auth implements AuthInterface
             return false;
         }
 
-        session_regenerate_id();
-
-        $_SESSION['user'] = $user->getId();
+        $this->session->regenerate();
+        $this->session->put('user', $user->getId());
 
         $this->user = $user;
 
@@ -93,13 +105,17 @@ class Auth implements AuthInterface
     }
 
     /**
-     * Logs out the current user.
+     * Logs the user out.
+     *
+     * Clears the 'user' session variable and regenerates the session id.
+     * Sets the authenticated user to null.
      *
      * @return void
      */
     public function logOut(): void
     {
-        unset($_SESSION['user']);
+        $this->session->forget('user');
+        $this->session->regenerate();
 
         $this->user = null;
     }
