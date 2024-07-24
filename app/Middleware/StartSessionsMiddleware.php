@@ -11,24 +11,41 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * @description This middleware will start a session if it has not already been started. It will throw an
- * exception if it has already been started. If headers have already been sent, it will throw an exception.
- *
- * @note This middleware will throw an exception if a session has already been started.
- * @note This middleware will throw an exception if headers have already been sent.
- *
+ * Middleware that starts the session, saves previous URL,
+ * and saves the session.
  */
 class StartSessionsMiddleware implements MiddlewareInterface
 {
+    /**
+     * Create a new instance of StartSessionsMiddleware.
+     *
+     * @param SessionInterface $session The session interface.
+     */
     public function __construct(private readonly SessionInterface $session)
     {
     }
+
+    /**
+     * Process the request and handle the session.
+     *
+     * @param ServerRequestInterface $request The request object.
+     * @param RequestHandlerInterface $handler The request handler.
+     * @return ResponseInterface The response.
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // Start the session
         $this->session->start();
 
+        // Continue processing the request
         $response = $handler->handle($request);
 
+        // Save previous URL
+        if ($request->getMethod() === 'GET') {
+            $this->session->put('previousUrl', (string) $request->getUri());
+        }
+
+        // Save the session
         $this->session->save();
 
         return $response;
