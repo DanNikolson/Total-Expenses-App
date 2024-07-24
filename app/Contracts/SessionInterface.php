@@ -60,4 +60,29 @@ interface SessionInterface
      * @param string $key The name of the session variable to delete
      */
     public function forget(string $key): void;
+
+    /**
+     * Checks whether a session variable exists.
+     *
+     * @param string $key The name of the session variable
+     * @return bool true if the session variable exists, false otherwise
+     */
+    public function has(string $key): bool;
+
+    /**
+     * Flashes a message to the session with optional custom messages.
+     *
+     * @param string $key The main message to flash
+     * @param array $messages Additional messages to flash
+     */
+    public function flash(string $key, array $messages): void;
+
+    /**
+     * Retrieves flash messages stored under a given key.
+     *
+     * @param string $key The key to retrieve the flash messages from
+     * @return array The flash messages stored under the given key, or an empty
+     *               array if no messages are stored
+     */
+    public function getFlash(string $key): array;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Contracts\SessionInterface;
 use App\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -17,19 +18,15 @@ use Psr\Http\Message\ResponseFactoryInterface;
 class ValidationExceptionMiddleware implements MiddlewareInterface
 {
     /**
-     * The factory used to create the redirect response.
-     *
-     * @var ResponseFactoryInterface
-     */
-    private ResponseFactoryInterface $responseFactory;
-    /**
      * Create a new instance of ValidationExceptionMiddleware.
      *
      * @param ResponseFactoryInterface $responseFactory The factory used to create the redirect response.
+     * @param SessionInterface $session Gives access to session methods
      */
-    public function __construct(ResponseFactoryInterface $responseFactory)
-    {
-        $this->responseFactory = $responseFactory;
+    public function __construct(
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly SessionInterface $session
+    ) {
     }
     /**
      * Process the request and handle any ValidationExceptions that occur.
@@ -52,8 +49,8 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
 
             $sensitiveFields = ['password', 'confirmPassword'];
 
-            $_SESSION['errors'] = $e->errors;
-            $_SESSION['old'] = array_diff_key($oldData, array_flip($sensitiveFields));
+            $this->session->flash('errors', $e->errors);
+            $this->session->flash('old', array_diff_key($oldData, array_flip($sensitiveFields)));
 
             return $response->withHeader('Location', $referer)->withStatus(302);
         }
