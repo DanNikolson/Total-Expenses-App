@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Auth;
 use Slim\App;
 use App\Config;
+use App\Session;
 use Slim\Views\Twig;
 use function DI\create;
 use Doctrine\ORM\ORMSetup;
@@ -13,6 +14,7 @@ use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use App\Contracts\AuthInterface;
 use Twig\Extra\Intl\IntlExtension;
+use App\Contracts\SessionInterface;
 use Symfony\Component\Asset\Package;
 use App\Services\UserProviderService;
 use Psr\Container\ContainerInterface;
@@ -80,4 +82,5 @@ return [
     ResponseFactoryInterface::class => fn (App $app) => $app->getResponseFactory(),
     AuthInterface::class => fn (ContainerInterface $container) => $container->get(Auth::class),
     UserProviderServiceInterface::class => fn (ContainerInterface $container) => $container->get(UserProviderService::class),
+    SessionInterface::class => fn () => new Session(),
 ];
