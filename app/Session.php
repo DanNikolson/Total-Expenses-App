@@ -30,7 +30,7 @@ class Session implements SessionInterface
      */
     public function start(): void
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
+        if ($this->isActive()) {
             throw new SessionException('Session has already been started');
         }
 
@@ -49,5 +49,15 @@ class Session implements SessionInterface
     public function save(): void
     {
         session_write_close();
+    }
+
+    /**
+     * Checks whether the session is currently active.
+     *
+     * @return bool true if the session is active, false otherwise
+     */
+    public function isActive(): bool
+    {
+        return session_status() === PHP_SESSION_ACTIVE;
     }
 }

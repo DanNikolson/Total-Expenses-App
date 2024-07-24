@@ -21,4 +21,11 @@ interface SessionInterface
      * Saves the session and closes the session file.
      */
     public function save(): void;
+
+    /**
+     * Checks if the session is active.
+     *
+     * @return bool True if the session is active, false otherwise.
+     */
+    public function isActive(): bool;
 }
