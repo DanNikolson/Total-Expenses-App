@@ -7,12 +7,14 @@ use Slim\App;
 use App\Config;
 use App\Session;
 use Slim\Views\Twig;
+use App\Enum\SameSite;
 use function DI\create;
 use Doctrine\ORM\ORMSetup;
 use App\Enum\AppEnvironment;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use App\Contracts\AuthInterface;
+use App\DataObjects\SessionConfig;
 use Twig\Extra\Intl\IntlExtension;
 use App\Contracts\SessionInterface;
 use Symfony\Component\Asset\Package;
@@ -82,5 +84,12 @@ return [
     ResponseFactoryInterface::class => fn (App $app) => $app->getResponseFactory(),
     AuthInterface::class => fn (ContainerInterface $container) => $container->get(Auth::class),
     UserProviderServiceInterface::class => fn (ContainerInterface $container) => $container->get(UserProviderService::class),
-    SessionInterface::class => fn (Config $config) => new Session($config->get('session', [])),
+    SessionInterface::class => fn (Config $config) => new Session(
+        new SessionConfig(
+            $config->get('session.name', ''),
+            $config->get('session.secure', 'true'),
+            $config->get('session.httponly', 'true'),
+            SameSite::from($config->get('session.samesite', 'lax'))
+        )
+    ),
 ];

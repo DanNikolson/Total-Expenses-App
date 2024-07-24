@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Contracts\SessionInterface;
+use App\DataObjects\SessionConfig;
 use App\Exception\SessionException;
 
 /**
@@ -19,7 +20,7 @@ class Session implements SessionInterface
      *
      * Initializes the session.
      */
-    public function __construct(private readonly array $options)
+    public function __construct(private readonly SessionConfig $options)
     {
     }
 
@@ -40,9 +41,9 @@ class Session implements SessionInterface
 
         session_set_cookie_params(
             [
-                'secure' => $this->options['secure'] ?? true,
-                'httponly' => $this->options['httponly'] ?? true,
-                'samesite' => $this->options['samesite'] ?? 'lax',
+                'secure' => $this->options->secure,
+                'httponly' => $this->options->httpOnly,
+                'samesite' => $this->options->sameSite->value,
             ]
         );
 
