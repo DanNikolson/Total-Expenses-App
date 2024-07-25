@@ -49,8 +49,8 @@ class UserProviderService implements UserProviderServiceInterface
     /**
      * Creates a new user with the provided data and persists it to the database.
      *
-     * @param array $data An associative array containing the user's data.
-     *                    The array should have the following keys:
+     * @param RegisterUserData $data Data transfer object containing the user's data.
+     *                    Data should have the following property values:
      *                    - name: The user's name.
      *                    - email: The user's email address.
      *                    - password: The user's password.
@@ -59,10 +59,10 @@ class UserProviderService implements UserProviderServiceInterface
     public function createUser(RegisterUserData $data): UserInterface
     {
         $user = new User();
-        $user->setName($data['name']);
-        $user->setEmail($data['email']);
+        $user->setName($data->name);
+        $user->setEmail($data->email);
         $user->setPassword(password_hash(
-            $data['password'],
+            $data->password,
             PASSWORD_BCRYPT,
             ['cost' => 12]
         ));
