@@ -4,10 +4,10 @@ namespace App\Controllers;
 
 use Slim\Views\Twig;
 use Valitron\Validator;
-use Doctrine\ORM\EntityManager;
 use App\Contracts\AuthInterface;
 use App\DataObjects\RegisterUserData;
 use App\Exception\ValidationException;
+use App\Contracts\RequestValidatorFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\RequestValidators\RegisterUserRequestValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,7 +16,7 @@ class AuthController
 {
     public function __construct(
         private readonly Twig $twig,
-        private readonly EntityManager $entityManager,
+        private readonly RequestValidatorFactoryInterface $requestValidatorFactory,
         private readonly AuthInterface $auth,
     ) {
     }
@@ -33,7 +33,8 @@ class AuthController
 
     public function register(Request $request, Response $response): Response
     {
-        $data = (new RegisterUserRequestValidator($this->entityManager))->validate($request->getParsedBody());
+        $data = $this->requestValidatorFactory->make(RegisterUserRequestValidator::class)
+            ->validate($request->getParsedBody());
 
         $this->auth->register(new RegisterUserData(
             $data['name'],
