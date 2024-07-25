@@ -9,6 +9,7 @@ use App\DataObjects\RegisterUserData;
 use App\Exception\ValidationException;
 use App\Contracts\RequestValidatorFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
+use App\RequestValidators\UserLoginRequestValidator;
 use App\RequestValidators\RegisterUserRequestValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -47,13 +48,8 @@ class AuthController
 
     public function logIn(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
-
-        $v = new Validator($data);
-
-        $v->rule('required', ['email', 'password']);
-        $v->rule('email', 'email');
-
+        $data = $this->requestValidatorFactory->make(UserLoginRequestValidator::class)
+            ->validate($request->getParsedBody());
 
         if (!$this->auth->attemptLogin($data)) {
             throw new ValidationException(['password' => ['You have entered an invalid username or password']]);
