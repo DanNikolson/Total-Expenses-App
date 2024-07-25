@@ -24,7 +24,9 @@ use Symfony\Component\Asset\Packages;
 use Psr\Http\Message\ResponseFactoryInterface;
 use App\Contracts\UserProviderServiceInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
+use App\RequestValidators\RequestValidatorFactory;
 use Symfony\WebpackEncoreBundle\Asset\TagRenderer;
+use App\Contracts\RequestValidatorFactoryInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 use Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
@@ -92,5 +94,8 @@ return [
             $config->get('session.httponly', 'true'),
             SameSite::from($config->get('session.samesite', 'lax'))
         )
+    ),
+    RequestValidatorFactoryInterface::class => fn (ContainerInterface $container) => $container->get(
+        RequestValidatorFactory::class
     ),
 ];
