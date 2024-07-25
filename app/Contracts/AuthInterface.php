@@ -41,4 +41,12 @@ interface AuthInterface
      * @return void
      */
     public function logOut(): void;
+
+    /**
+     * Registers a new user with the provided data.
+     *
+     * @param array $data The data to register a new user with.
+     * @return UserInterface The newly registered user.
+     */
+    public function register(array $data): UserInterface;
 }

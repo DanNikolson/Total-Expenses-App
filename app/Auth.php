@@ -119,4 +119,13 @@ class Auth implements AuthInterface
 
         $this->user = null;
     }
+
+    public function register(array $data): UserInterface
+    {
+        $user = $this->userProvider->createUser($data);
+
+        //Authenticate user
+
+        return $user;
+    }
 }

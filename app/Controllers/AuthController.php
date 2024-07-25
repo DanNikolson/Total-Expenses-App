@@ -27,7 +27,7 @@ class AuthController
         return $this->twig->render($response, 'auth/register.twig');
     }
 
-    public function Register(Request $request, Response $response): Response
+    public function register(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
 
@@ -42,25 +42,13 @@ class AuthController
             "email"
         )->message("User with the given email address already exists");
 
-        if ($v->validate()) {
-            echo "Yay! We're all good!";
-        } else {
-            // Errors
+        if (!$v->validate()) {
             throw new ValidationException($v->errors());
         }
 
-        exit;
+        $this->auth->register($data);
 
-        $user = new User();
-
-        $user->setName($data['name']);
-        $user->setEmail($data['email']);
-        $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]));
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        return $response;
+        return $response->withHeader('Location', '/')->withStatus(302);
     }
 
     public function logIn(Request $request, Response $response): Response
