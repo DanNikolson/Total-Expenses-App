@@ -16,6 +16,9 @@
                                     Login
                                 </h2>
                                 <form method="post" action="/login">
+                                    <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                                    <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                                    
                                     <div class="form-outline form-white mb-4">
                                         <input type="email" name="email" class="form-control form-control-lg {{ errors.email ? 'is-invalid' : ''}}" 
                                                value="{{ old.email }}"
