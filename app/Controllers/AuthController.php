@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Entity\User;
 use Slim\Views\Twig;
 use Valitron\Validator;
 use Doctrine\ORM\EntityManager;
@@ -10,6 +9,7 @@ use App\Contracts\AuthInterface;
 use App\DataObjects\RegisterUserData;
 use App\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
+use App\RequestValidators\RegisterUserRequestValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AuthController
@@ -33,22 +33,7 @@ class AuthController
 
     public function register(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
-
-        $v = new Validator($data);
-        $v->rule('required', ['name', 'email', 'password', 'confirmPassword']);
-        $v->rule('email', 'email');
-        $v->rule('equals', 'confirmPassword', 'password')->label('Confirm Password');
-        $v->rule(
-            fn ($field, $value, $params, $fields) => !$this->entityManager->getRepository(User::class)->count(
-                ['email' => $value]
-            ),
-            "email"
-        )->message("User with the given email address already exists");
-
-        if (!$v->validate()) {
-            throw new ValidationException($v->errors());
-        }
+        $data = (new RegisterUserRequestValidator($this->entityManager))->validate($request->getParsedBody());
 
         $this->auth->register(new RegisterUserData(
             $data['name'],
