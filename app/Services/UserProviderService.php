@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use App\Contracts\UserInterface;
+use App\DataObjects\RegisterUserData;
 use App\Contracts\UserProviderServiceInterface;
 
 /**
@@ -55,7 +56,7 @@ class UserProviderService implements UserProviderServiceInterface
      *                    - password: The user's password.
      * @return UserInterface The newly created user.
      */
-    public function createUser(array $data): UserInterface
+    public function createUser(RegisterUserData $data): UserInterface
     {
         $user = new User();
         $user->setName($data['name']);

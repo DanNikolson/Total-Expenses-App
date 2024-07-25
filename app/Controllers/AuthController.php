@@ -2,19 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Contracts\AuthInterface;
 use App\Entity\User;
 use Slim\Views\Twig;
 use Valitron\Validator;
 use Doctrine\ORM\EntityManager;
+use App\Contracts\AuthInterface;
+use App\DataObjects\RegisterUserData;
 use App\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AuthController
 {
-    public function __construct(private readonly Twig $twig, private readonly EntityManager $entityManager, private readonly AuthInterface $auth)
-    {
+    public function __construct(
+        private readonly Twig $twig,
+        private readonly EntityManager $entityManager,
+        private readonly AuthInterface $auth,
+    ) {
     }
 
     public function loginView(Request $request, Response $response): Response
@@ -46,7 +50,11 @@ class AuthController
             throw new ValidationException($v->errors());
         }
 
-        $this->auth->register($data);
+        $this->auth->register(new RegisterUserData(
+            $data['name'],
+            $data['email'],
+            $data['password']
+        ));
 
         return $response->withHeader('Location', '/')->withStatus(302);
     }

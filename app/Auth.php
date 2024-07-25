@@ -8,6 +8,7 @@ use App\Contracts\AuthInterface;
 use App\Contracts\SessionInterface;
 use App\Contracts\UserInterface;
 use App\Contracts\UserProviderServiceInterface;
+use App\DataObjects\RegisterUserData;
 
 /**
  * This class implements the AuthInterface and provides functionality for user authentication.
@@ -29,7 +30,7 @@ class Auth implements AuthInterface
      */
     public function __construct(
         private readonly UserProviderServiceInterface $userProvider,
-        private readonly SessionInterface $session
+        private readonly SessionInterface $session,
     ) {
     }
 
@@ -122,10 +123,10 @@ class Auth implements AuthInterface
      *
      * Creates a new user using the user provider service and logs the user in.
      *
-     * @param array $data The user data to register.
+     * @param RegisterUserData $data The user data to register.
      * @return UserInterface The newly registered user.
      */
-    public function register(array $data): UserInterface
+    public function register(RegisterUserData $data): UserInterface
     {
         $user = $this->userProvider->createUser($data);
 

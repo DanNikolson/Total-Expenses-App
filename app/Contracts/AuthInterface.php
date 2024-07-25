@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
+use App\DataObjects\RegisterUserData;
+
 /**
  * Interface for classes that implement authentication functionality.
  */
@@ -45,10 +47,10 @@ interface AuthInterface
     /**
      * Registers a new user with the provided data.
      *
-     * @param array $data The data to register a new user with.
+     * @param RegisterUserData $data The data to register the user with.
      * @return UserInterface The newly registered user.
      */
-    public function register(array $data): UserInterface;
+    public function register(RegisterUserData $data): UserInterface;
 
     /**
      * Logs in the provided user.

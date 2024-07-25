@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
+use App\DataObjects\RegisterUserData;
+
 /**
  * Interface for classes that provide user-related services.
  */
@@ -28,8 +30,8 @@ interface UserProviderServiceInterface
     /**
      * Create a new user with the provided data.
      *
-     * @param array $data The data to create the user with.
+     * @param RegisterUserData $data The data to create the user with.
      * @return UserInterface The newly created user.
      */
-    public function createUser(array $data): UserInterface;
+    public function createUser(RegisterUserData $data): UserInterface;
 }
