@@ -84,10 +84,7 @@ class Auth implements AuthInterface
             return false;
         }
 
-        $this->session->regenerate();
-        $this->session->put('user', $user->getId());
-
-        $this->user = $user;
+        $this->logIn($user);
 
         return true;
     }
@@ -120,12 +117,36 @@ class Auth implements AuthInterface
         $this->user = null;
     }
 
+    /**
+     * Registers a new user with the provided data.
+     *
+     * Creates a new user using the user provider service and logs the user in.
+     *
+     * @param array $data The user data to register.
+     * @return UserInterface The newly registered user.
+     */
     public function register(array $data): UserInterface
     {
         $user = $this->userProvider->createUser($data);
 
-        //Authenticate user
+        $this->logIn($user);
 
         return $user;
+    }
+
+    /**
+     * Logs in the given user.
+     *
+     * Regenerates the session ID, stores the user's ID in the session, and sets the authenticated user.
+     *
+     * @param UserInterface $user The user to log in.
+     * @return void
+     */
+    public function logIn(UserInterface $user): void
+    {
+        $this->session->regenerate();
+        $this->session->put('user', $user->getId());
+
+        $this->user = $user;
     }
 }

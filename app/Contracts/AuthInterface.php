@@ -49,4 +49,15 @@ interface AuthInterface
      * @return UserInterface The newly registered user.
      */
     public function register(array $data): UserInterface;
+
+    /**
+     * Logs in the provided user.
+     *
+     * This method sets the user as the currently authenticated user and clears any
+     * authentication related data.
+     *
+     * @param UserInterface $user The user to log in.
+     * @return void
+     */
+    public function logIn(UserInterface $user): void;
 }
