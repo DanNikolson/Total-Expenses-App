@@ -24,4 +24,12 @@ interface UserProviderServiceInterface
      * @return UserInterface|null The user associated with the credentials, or null if not found.
      */
     public function getByCredentials(array $credentials): ?UserInterface;
+
+    /**
+     * Create a new user with the provided data.
+     *
+     * @param array $data The data to create the user with.
+     * @return UserInterface The newly created user.
+     */
+    public function createUser(array $data): UserInterface;
 }
