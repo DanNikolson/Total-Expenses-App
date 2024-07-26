@@ -1,5 +1,6 @@
 @import "./variables.scss";
 @import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-icons/font/bootstrap-icons";
 
 * {
   font-family: "Roboto", sans-serif !important;
@@ -26,4 +27,11 @@ svg.icon {
   &:focus {
     color: #57585a !important;
   }
+}
+
+.content-body {
+  background-color: #fefeff;
+  min-height: 500px;
+  border-radius: 1rem;
+  padding: 20px 25px 25px;
 }
