@@ -3,14 +3,13 @@
 namespace App\Controllers;
 
 use Slim\Views\Twig;
-use Valitron\Validator;
 use App\Contracts\AuthInterface;
 use App\DataObjects\RegisterUserData;
 use App\Exception\ValidationException;
 use App\Contracts\RequestValidatorFactoryInterface;
-use Psr\Http\Message\ResponseInterface as Response;
 use App\RequestValidators\UserLoginRequestValidator;
 use App\RequestValidators\RegisterUserRequestValidator;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AuthController
