@@ -29,8 +29,8 @@ class GuestMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Process the request and handle the authentication.
      * If the user is authenticated, it redirects to the home page.
+     * Process the request and handle the authentication.
      *
      * @param ServerRequestInterface $request The request object.
      * @param RequestHandlerInterface $handler The request handler.
