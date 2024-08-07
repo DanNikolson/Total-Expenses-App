@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Contracts\RequestValidatorFactoryInterface;
 use Slim\Views\Twig;
+use App\Services\CategoryService;
+use App\Contracts\RequestValidatorFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\RequestValidators\CreateCategoryRequestValidator;
@@ -14,7 +15,8 @@ class CategoriesController
 {
     public function __construct(
         private readonly Twig $twig,
-        private readonly RequestValidatorFactoryInterface $requestValidatorFactory
+        private readonly RequestValidatorFactoryInterface $requestValidatorFactory,
+        private readonly CategoryService $categoryService
     ) {
     }
 
@@ -28,11 +30,7 @@ class CategoriesController
         $data = $this->requestValidatorFactory->make(CreateCategoryRequestValidator::class)
             ->validate($request->getParsedBody());
 
-        $this->auth->register(new RegisterUserData(
-            $data['name'],
-            $data['email'],
-            $data['password']
-        ));
+        $this->categoryService->create($data['name'], $request->getAttribute('user'));
 
         return $response->withHeader('Location', '/categories')->withStatus(302);
     }
