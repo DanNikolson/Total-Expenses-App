@@ -55,4 +55,20 @@ class CategoryService
     {
         return $this->entityManager->getRepository(Category::class)->findAll();
     }
+
+    /**
+     * Deletes a category from the database.
+     *
+     * This function uses the Doctrine EntityManager to remove a category from the database.
+     *
+     * @param int $id The ID of the category to be deleted.
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        $category = $this->entityManager->find(Category::class, $id);
+
+        $this->entityManager->remove($category);
+        $this->entityManager->flush();
+    }
 }
