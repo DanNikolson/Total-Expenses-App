@@ -71,4 +71,34 @@ class CategoriesController
 
         return $response->withHeader('Location', '/categories')->withStatus(302);
     }
+    /**
+     * Retrieve a category by its ID and return it as JSON.
+     *
+     * @param Request $request The HTTP request.
+     * @param Response $response The HTTP response.
+     * @param array $args The route arguments.
+     * @return Response The response containing the category data as JSON.
+     *         If the category is not found, a 404 status code is returned.
+     */
+    public function get(Request $request, Response $response, array $args): Response
+    {
+        // Retrieve the category by its ID
+        $category = $this->categoryService->getById((int) $args['id']);
+
+        // If the category does not exist, return a 404 status code
+        if (!$category) {
+            return $response->withStatus(404);
+        }
+
+        // Prepare the category data to be returned as JSON
+        $data = [
+            'id' => $category->getId(),
+            'name' => $category->getName()
+        ];
+
+        // Add the category data to the response body and return it
+        $response->getBody()->write(json_encode($data));
+
+        return $response;
+    }
 }

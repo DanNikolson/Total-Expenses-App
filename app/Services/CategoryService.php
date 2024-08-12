@@ -71,4 +71,17 @@ class CategoryService
         $this->entityManager->remove($category);
         $this->entityManager->flush();
     }
+
+    /**
+     * Retrieves a category entity from the database by its ID.
+     *
+     * This function uses the Doctrine EntityManager to retrieve a category from the database by its ID.
+     *
+     * @param int $id The ID of the category to be retrieved.
+     * @return Category|null The category with the specified ID, or null if no category is found.
+     */
+    public function getById(int $id): ?Category
+    {
+        return $this->entityManager->find(Category::class, $id);
+    }
 }
