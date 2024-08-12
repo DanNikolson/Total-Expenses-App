@@ -17,12 +17,11 @@ class CategoriesController
         private readonly Twig $twig,
         private readonly RequestValidatorFactoryInterface $requestValidatorFactory,
         private readonly CategoryService $categoryService
-    ) {
-    }
+    ) {}
 
     public function index(Request $request, Response $response): Response
     {
-        return $this->twig->render($response, 'categories/index.twig');
+        return $this->twig->render($response, 'categories/index.twig', ['categories' => $this->categoryService->getAll()]);
     }
 
     public function store(Request $request, Response $response): Response

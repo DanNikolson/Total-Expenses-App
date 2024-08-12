@@ -21,9 +21,7 @@ class CategoryService
      * @param EntityManager $entityManager The Doctrine EntityManager used to persist and flush the category.
      */
 
-    public function __construct(private readonly EntityManager $entityManager)
-    {
-    }
+    public function __construct(private readonly EntityManager $entityManager) {}
 
     /**
      * Creates a new category.
@@ -43,5 +41,18 @@ class CategoryService
         $this->entityManager->flush();
 
         return $category;
+    }
+
+    /**
+     * Retrieves all categories from the database.
+     *
+     * This function uses the Doctrine EntityManager to retrieve all categories from the database.
+     *
+     * @return array An array of Category objects representing all categories in the database.
+     */
+
+    public function getAll(): array
+    {
+        return $this->entityManager->getRepository(Category::class)->findAll();
     }
 }
