@@ -96,6 +96,14 @@ class CategoriesController
             'name' => $category->getName()
         ];
 
+        /**
+         * Set the response header to indicate JSON content type.
+         *
+         * @param Response $response The HTTP response.
+         * @return Response The response with the 'Content-Type' header set to 'application/json'.
+         */
+        $response = $response->withHeader('Content-Type', 'application/json');
+
         // Add the category data to the response body and return it
         $response->getBody()->write(json_encode($data));
 
