@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use Slim\Views\Twig;
+use App\ResponseFormatter;
 use App\Services\CategoryService;
 use App\Contracts\RequestValidatorFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,7 +26,8 @@ class CategoriesController
     public function __construct(
         private readonly Twig $twig,
         private readonly RequestValidatorFactoryInterface $requestValidatorFactory,
-        private readonly CategoryService $categoryService
+        private readonly CategoryService $categoryService,
+        private readonly ResponseFormatter $responseFormatter
     ) {}
 
     /**
@@ -96,17 +98,6 @@ class CategoriesController
             'name' => $category->getName()
         ];
 
-        /**
-         * Set the response header to indicate JSON content type.
-         *
-         * @param Response $response The HTTP response.
-         * @return Response The response with the 'Content-Type' header set to 'application/json'.
-         */
-        $response = $response->withHeader('Content-Type', 'application/json');
-
-        // Add the category data to the response body and return it
-        $response->getBody()->write(json_encode($data));
-
-        return $response;
+        return $this->responseFormatter->asJson($response, $data);
     }
 }
