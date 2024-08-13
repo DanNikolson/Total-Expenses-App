@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Auth;
+use App\Csrf;
 use Slim\App;
 use App\Config;
 use App\Session;
@@ -55,7 +56,7 @@ return [
         return $app;
     },
     Config::class                 => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
-    EntityManager::class          => fn (Config $config) => EntityManager::create(
+    EntityManager::class          => fn(Config $config) => EntityManager::create(
         $config->get('doctrine.connection'),
         ORMSetup::createAttributeMetadataConfiguration(
             $config->get('doctrine.entity_dir'),
@@ -77,17 +78,17 @@ return [
     /**
      * The following two bindings are needed for EntryFilesTwigExtension & AssetExtension to work for Twig
      */
-    'webpack_encore.packages'     => fn () => new Packages(
+    'webpack_encore.packages'     => fn() => new Packages(
         new Package(new JsonManifestVersionStrategy(BUILD_PATH . '/manifest.json'))
     ),
-    'webpack_encore.tag_renderer' => fn (ContainerInterface $container) => new TagRenderer(
+    'webpack_encore.tag_renderer' => fn(ContainerInterface $container) => new TagRenderer(
         new EntrypointLookup(BUILD_PATH . '/entrypoints.json'),
         $container->get('webpack_encore.packages')
     ),
-    ResponseFactoryInterface::class => fn (App $app) => $app->getResponseFactory(),
-    AuthInterface::class => fn (ContainerInterface $container) => $container->get(Auth::class),
-    UserProviderServiceInterface::class => fn (ContainerInterface $container) => $container->get(UserProviderService::class),
-    SessionInterface::class => fn (Config $config) => new Session(
+    ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
+    AuthInterface::class => fn(ContainerInterface $container) => $container->get(Auth::class),
+    UserProviderServiceInterface::class => fn(ContainerInterface $container) => $container->get(UserProviderService::class),
+    SessionInterface::class => fn(Config $config) => new Session(
         new SessionConfig(
             $config->get('session.name', ''),
             $config->get('session.flash_name', 'flash'),
@@ -96,8 +97,8 @@ return [
             SameSite::from($config->get('session.samesite', 'lax'))
         )
     ),
-    RequestValidatorFactoryInterface::class => fn (ContainerInterface $container) => $container->get(
+    RequestValidatorFactoryInterface::class => fn(ContainerInterface $container) => $container->get(
         RequestValidatorFactory::class
     ),
-    'csrf' => fn (ResponseFactoryInterface $responseFactory) => new Guard($responseFactory, persistentTokenMode: true),
+    'csrf' => fn(ResponseFactoryInterface $responseFactory, Csrf $csrf) => new Guard($responseFactory, persistentTokenMode: true, failureHandler: $csrf->failureHandler()),
 ];

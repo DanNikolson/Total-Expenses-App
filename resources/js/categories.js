@@ -19,21 +19,27 @@ window.addEventListener("DOMContentLoaded", function () {
     .querySelector(".save-category-btn")
     .addEventListener("click", function (event) {
       const categoryId = event.currentTarget.getAttribute("data-id");
+      const csrfName = editCategoryModal._element.querySelector(
+        'input[name="csrf_name"]'
+      ).value;
+      const csrfValue = editCategoryModal._element.querySelector(
+        'input[name="csrf_value]'
+      ).value;
 
       fetch(`/categories/${categoryId}`, {
         method: "POST",
         body: JSON.stringify({
           name: editCategoryModal._element.querySelector('input[name="name"]')
             .value,
+          csrf_name: csrfName,
+          csrf_value: csrfValue,
         }),
-        header: {
+        headers: {
           "Content-Type": "application/json",
         },
-      })
-        .then((response) => response.text())
-        .then((response) => {
-          console.log(response);
-        });
+      }).then((response) => {
+        console.log(response);
+      });
     });
 });
 
