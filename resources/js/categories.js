@@ -20,8 +20,20 @@ window.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", function (event) {
       const categoryId = event.currentTarget.getAttribute("data-id");
 
-      // TODO: Post update to the category
-      console.log(categoryId);
+      fetch(`/categories/${categoryId}`, {
+        method: "POST",
+        body: JSON.stringify({
+          name: editCategoryModal._element.querySelector('input[name="name"]')
+            .value,
+        }),
+        header: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.text())
+        .then((response) => {
+          console.log(response);
+        });
     });
 });
 

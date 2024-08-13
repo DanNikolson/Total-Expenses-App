@@ -100,4 +100,21 @@ class CategoriesController
 
         return $this->responseFormatter->asJson($response, $data);
     }
+    public function update(Request $request, Response $response, array $args): Response
+    {
+        // Retrieve the category by its ID
+        $category = $this->categoryService->getById((int) $args['id']);
+
+        // If the category does not exist, return a 404 status code
+        if (!$category) {
+            return $response->withStatus(404);
+        }
+
+        // Prepare the category data to be returned as JSON
+        $data = [
+            'status' => 'ok',
+        ];
+
+        return $this->responseFormatter->asJson($response, $data);
+    }
 }
