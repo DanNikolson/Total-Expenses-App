@@ -11,6 +11,7 @@ use App\Contracts\RequestValidatorFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\RequestValidators\CreateCategoryRequestValidator;
+use App\RequestValidators\UpdateCategoryRequestValidator;
 
 /**
  * This class is responsible for handling HTTP requests related to categories.
@@ -51,11 +52,14 @@ class CategoriesController
      */
     public function store(Request $request, Response $response): Response
     {
+        // Validate the request data
         $data = $this->requestValidatorFactory->make(CreateCategoryRequestValidator::class)
             ->validate($request->getParsedBody());
 
+        // Create a new category with the provided name and the authenticated user
         $this->categoryService->create($data['name'], $request->getAttribute('user'));
 
+        // Redirect the user to the categories page
         return $response->withHeader('Location', '/categories')->withStatus(302);
     }
 
@@ -102,6 +106,9 @@ class CategoriesController
     }
     public function update(Request $request, Response $response, array $args): Response
     {
+        // Validate the request data
+        $data = $this->requestValidatorFactory->make(UpdateCategoryRequestValidator::class)
+            ->validate($request->getParsedBody());
         // Retrieve the category by its ID
         $category = $this->categoryService->getById((int) $args['id']);
 
